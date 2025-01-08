@@ -18,7 +18,8 @@ exports.create = (req, res) => {
   const ex_customer = Customer.findOne({where: {email: email}});
   if(ex_customer) {
     res.status(400).send({
-      message: "Already Exists"
+      message: "Already Exists",
+      id: ex_customer.id
     });
     return;
   }
