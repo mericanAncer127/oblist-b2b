@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     });
     return;
   }
-  // Create a Tutorial
+  // Create a Customer
   const customer = {
     firstName: firstName,
     lastName: lastName,
@@ -24,7 +24,7 @@ exports.create = (req, res) => {
     tag: tag || '',
   };
 
-  // Save Tutorial in the database
+  // Save Customer in the database
   Customer.create(customer)
     .then(data => {
       res.send(data);
@@ -37,12 +37,12 @@ exports.create = (req, res) => {
     });
 };
 
-// Retrieve all Tutorials from the database.
+// Retrieve all Customers from the database.
 exports.findAll = (req, res) => {
   const tag = req.query.tag;
   var condition = tag ? { tag: { [Op.like]: `%${tag}%` } } : null;
 
-  Tutorial.findAll({ where: condition })
+  Customer.findAll({ where: condition })
     .then(data => {
       res.send(data);
     })
