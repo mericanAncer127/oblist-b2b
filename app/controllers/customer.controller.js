@@ -4,44 +4,60 @@ const Op = db.Sequelize.Op;
 
 // Create and Save a new Customer
 exports.create = (req, res) => {
-  
-  const {firstName, lastName, email, address, taxID, tag} = req.body;
-  
+  const { firstName, lastName, email, address, taxID, tag } = req.body;
+
   // Validate request
   if (!firstName) {
-    res.status(400).send({
-      message: "Content can not be empty!"
+    return res.status(400).send({
+      message: "Content can not be empty!",
     });
-    return;
   }
 
-  const ex_customer = Customer.findOne({where: {email: email}});
-  if(ex_customer) {
-    res.status(400).send({
-      message: "Already Exists",
-      id: ex_customer.id
-    });
-    return;
-  }
-  // Create a Customer
-  const customer = {
-    firstName: firstName,
-    lastName: lastName,
-    email: email || 'no_email',
-    address: address || 'no_address',
-    taxID: taxID || 'no_taxID',
-    tag: tag || '',
-  };
+  Customer.findOne({
+    where: { email: email },
+  })
+    .then((result) => {
+      if (result) {
+        // If customer exists, send response early
+        return res.status(500).send({
+          message: "Already Exists",
+          id: result.dataValues.id,
+        });
+      }
 
-  // Save Customer in the database
-  Customer.create(customer)
-    .then(data => {
-      res.send(data);
+      // If no customer exists, proceed with other logic
+      // Create a Customer
+      const customer = {
+        firstName: firstName,
+        lastName: lastName,
+        email: email || "no_email",
+        address: address || "no_address",
+        taxID: taxID || "no_taxID",
+        tag: tag || "",
+      };
+
+      // Save Customer in the database
+      Customer.create(customer)
+        .then((data) => {
+          res.send(data);
+        })
+        .catch((err) => {
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the Customer.",
+          });
+        });
+      // Your other code for handling non-existence
+      // For example, you might create a new customer here or other logic
+
+      // Finally, you can send a success response if needed
+      // res.status(200).send({...});
     })
-    .catch(err => {
+    .catch((error) => {
+      // Handle any unexpected errors
+      console.error("Error finding customer:", error);
       res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Customer."
+        message: "Internal Server Error",
       });
     });
 };
@@ -52,13 +68,13 @@ exports.findAll = (req, res) => {
   var condition = tag ? { tag: { [Op.like]: `%${tag}%` } } : null;
 
   Customer.findAll({ where: condition })
-    .then(data => {
+    .then((data) => {
       res.send(data);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving customers."
+          err.message || "Some error occurred while retrieving customers.",
       });
     });
 };
@@ -68,18 +84,18 @@ exports.findOne = (req, res) => {
   const id = req.params.id;
 
   Customer.findByPk(id)
-    .then(data => {
+    .then((data) => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Customer with id=${id}.`
+          message: `Cannot find Customer with id=${id}.`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error retrieving Customer with id=" + id
+        message: "Error retrieving Customer with id=" + id,
       });
     });
 };
@@ -89,22 +105,22 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   Customer.update(req.body, {
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Customer was updated successfully."
+          message: "Customer was updated successfully.",
         });
       } else {
         res.send({
-          message: `Cannot update Customer with id=${id}. Maybe Customer was not found or req.body is empty!`
+          message: `Cannot update Customer with id=${id}. Maybe Customer was not found or req.body is empty!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Error updating Customer with id=" + id
+        message: "Error updating Customer with id=" + id,
       });
     });
 };
@@ -114,22 +130,22 @@ exports.delete = (req, res) => {
   const id = req.params.id;
 
   Customer.destroy({
-    where: { id: id }
+    where: { id: id },
   })
-    .then(num => {
+    .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Customer was deleted successfully!"
+          message: "Customer was deleted successfully!",
         });
       } else {
         res.send({
-          message: `Cannot delete Customer with id=${id}. Maybe Customer was not found!`
+          message: `Cannot delete Customer with id=${id}. Maybe Customer was not found!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Customer with id=" + id
+        message: "Could not delete Customer with id=" + id,
       });
     });
 };
@@ -138,15 +154,15 @@ exports.delete = (req, res) => {
 exports.deleteAll = (req, res) => {
   Customer.destroy({
     where: {},
-    truncate: false
+    truncate: false,
   })
-    .then(nums => {
+    .then((nums) => {
       res.send({ message: `${nums} Customers were deleted successfully!` });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while removing all customers."
+          err.message || "Some error occurred while removing all customers.",
       });
     });
 };
