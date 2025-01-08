@@ -30,9 +30,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: true,  // Optional field
       unique: true,  // Ensures the taxID is unique if provided
-      validate: {
-        isAlphanumeric: true,  // Validates that it's alphanumeric (you can adjust this depending on your country's format)
-      }
     },
     tag: {
       type: Sequelize.STRING,
