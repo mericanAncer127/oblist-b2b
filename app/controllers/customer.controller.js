@@ -14,6 +14,14 @@ exports.create = (req, res) => {
     });
     return;
   }
+
+  const ex_customer = Customer.findOne({where: {email: email}});
+  if(ex_customer) {
+    res.status(400).send({
+      message: "Already Exists"
+    });
+    return;
+  }
   // Create a Customer
   const customer = {
     firstName: firstName,
