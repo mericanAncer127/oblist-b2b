@@ -3,24 +3,15 @@ module.exports = (sequelize, Sequelize) => {
     firstName: {
       type: Sequelize.STRING,
       allowNull: true,  // Ensures the field is not null
-      validate: {
-        notEmpty: true,   // Ensures it's not an empty string
-      }
     },
     lastName: {
       type: Sequelize.STRING,
       allowNull: true,
-      validate: {
-        notEmpty: true,
-      }
     },
     email: {
       type: Sequelize.STRING,
       allowNull: true,
       unique: true,  // Ensures the email is unique
-      validate: {
-        isEmail: true,  // Validates if it's a valid email format
-      }
     },
     address: {
       type: Sequelize.STRING,
