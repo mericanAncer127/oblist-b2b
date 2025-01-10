@@ -38,12 +38,12 @@ exports.create = (req, res) => {
       // If no customer exists, proceed with other logic
       // Create a Customer
       const customer = {
-        firstName: firstName || "",
-        lastName: lastName || "",
-        email: email || "no_email",
-        address: address || "no_address",
-        taxID: taxID || "no_taxID",
-        tag: tag || "",
+        firstName: firstName || null,
+        lastName: lastName || null,
+        email: email || null,
+        address: address || null,
+        taxID: taxID || null,
+        tag: tag || null,
         userToken: userToken ,
       };
 
