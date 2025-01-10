@@ -6,8 +6,8 @@ const Op = db.Sequelize.Op;
 
 exports.dropTable = async (req, res) => {
   try {
-    await Customer.drop(); // Drop the table associated with the model
-    return res.status(200).send({message: 'Table dropped successfully'});
+    await Customer.sync({ force: true });  // This will drop the existing table and recreate it
+    return res.status(200).send({message: 'Table Recreated successfully'});
   } catch (error) {
     return res.status(400).send({message: 'Error dropping table:'});
   }
