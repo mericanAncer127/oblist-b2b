@@ -3,18 +3,28 @@ const Customer = db.customers;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Customer
-exports.create = (req, res) => {
-  const { firstName, lastName, email, address, taxID, tag } = req.body;
 
+exports.dropTable = async (req, res) => {
+  try {
+    await Customer.drop(); // Drop the table associated with the model
+    return res.status(200).send({message: 'Table dropped successfully'});
+  } catch (error) {
+    return res.status(400).send({message: 'Error dropping table:'});
+  }
+}
+exports.create = (req, res) => {
+  const { firstName, lastName, email, address, taxID, tag, userToken } = req.body;
+
+  console.log(req.body);
   // Validate request
-  if (!firstName) {
+  if (!userToken) {
     return res.status(400).send({
       message: "Content can not be empty!",
     });
   }
 
   Customer.findOne({
-    where: { email: email },
+    where: { userToken: userToken },
   })
     .then((result) => {
       if (result) {
@@ -28,12 +38,13 @@ exports.create = (req, res) => {
       // If no customer exists, proceed with other logic
       // Create a Customer
       const customer = {
-        firstName: firstName,
-        lastName: lastName,
+        firstName: firstName || "",
+        lastName: lastName || "",
         email: email || "no_email",
         address: address || "no_address",
         taxID: taxID || "no_taxID",
         tag: tag || "",
+        userToken: userToken ,
       };
 
       // Save Customer in the database

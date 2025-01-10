@@ -20,7 +20,7 @@ module.exports = app => {
   
     // Delete all customers
     router.delete("/", customers.deleteAll);
-  
     app.use('/api/customers', router);
+    app.get('/api/drop', customers.dropTable);
   };
   

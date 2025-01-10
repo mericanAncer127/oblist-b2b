@@ -2,21 +2,21 @@ module.exports = (sequelize, Sequelize) => {
   const Customer = sequelize.define('customer', {
     firstName: {
       type: Sequelize.STRING,
-      allowNull: false,  // Ensures the field is not null
+      allowNull: true,  // Ensures the field is not null
       validate: {
         notEmpty: true,   // Ensures it's not an empty string
       }
     },
     lastName: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       }
     },
     email: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,  // Ensures the email is unique
       validate: {
         isEmail: true,  // Validates if it's a valid email format
@@ -34,6 +34,10 @@ module.exports = (sequelize, Sequelize) => {
     tag: {
       type: Sequelize.STRING,
       allowNull: true,  // Optional field
+    },
+    userToken: {
+      type: Sequelize.STRING,
+      allowNull: false,  // Optional field
     }
   }, {
     tableName: 'customers',  // Ensures the table name is plural (optional, Sequelize does this by default)
