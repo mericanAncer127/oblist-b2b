@@ -11,7 +11,6 @@ module.exports = (sequelize, Sequelize) => {
     email: {
       type: Sequelize.STRING,
       allowNull: true,
-      unique: true,  // Ensures the email is unique
     },
     address: {
       type: Sequelize.STRING,
@@ -29,6 +28,7 @@ module.exports = (sequelize, Sequelize) => {
     userToken: {
       type: Sequelize.STRING,
       allowNull: false,  // Optional field
+      unique: true,  // Ensures the email is unique
     }
   }, {
     tableName: 'customers',  // Ensures the table name is plural (optional, Sequelize does this by default)
